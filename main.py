@@ -56,6 +56,7 @@ def get_name(index):
     return jsonify({'User': sampleData[index]})
 
 
+# simple call from terminal " curl -i "Content-Type: App;ication/json" -X POST http://127.0.0.1:5000/sample "
 @app.route('/sample', methods=['POST'])
 def add_user():
     user = {
@@ -73,6 +74,20 @@ def add_user():
     }
     sampleData.append(user)
     return jsonify({'Created': sampleData})
+
+
+# simple call from terminal " curl -i "Content-Type: App;ication/json" -X PUT http://127.0.0.1:5000/sample/0 "
+@app.route("/sample/<int:index_change>", methods=['PUT'])
+def user_update(index_change):
+    sampleData[index_change]['secretIdentity'] = "Changed!"
+    return jsonify({'user': sampleData[index_change]})
+
+
+# simple call from terminal " curl -i "Content-Type: App;ication/json" -X DELETE http://127.0.0.1:5000/sample/0 "
+@app.route("/sample/<int:index_delete>", methods=['DELETE'])
+def user_delete(index_delete):
+    sampleData.remove(sampleData[index_delete])
+    return jsonify({'result': True})
 
 
 if __name__ == "__main__":
