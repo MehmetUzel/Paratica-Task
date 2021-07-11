@@ -48,26 +48,40 @@ class UserAction(db.Model):
 
 
 @app.route('/users', methods=['GET'])
-def index():
+def list_users():
     users = db.session.query(UserModel)
     result = [{'name': getattr(d, 'name')} for d in users]
     return jsonify(users=result)
 
 
-@app.route('/users/<int:id>', methods=['GET'])
-def get_name(id):
-    user = db.session.query(UserModel).filter(UserModel.id == id)
+@app.route('/users/<int:user_id>', methods=['GET'])
+def get_name(user_id):
+    user = db.session.query(UserModel).filter(UserModel.id == user_id)
     return user[0].name
 
 
-# simple call from terminal " curl -i "Content-Type: App;ication/json" -X POST http://127.0.0.1:5000/sample "
 @app.route('/search', methods=['POST'])
-def add_user():
-    user = db.session.query(UserModel).filter(UserModel.name.ilike('%Ana%'))
-    #user = db.session.query(UserModel).filter(func.lower(UserModel.name) == func.lower('zoe Abramson'))
-    result = [{'id': getattr(d,'id'),'name': getattr(d, 'name')} for d in user]
+def find_user():
+    data = request.get_json()
+    name = data['filter']['name']
+    user = db.session.query(UserModel).filter(UserModel.name.ilike('%' + name + '%'))
+    # user = db.session.query(UserModel).filter(func.lower(UserModel.name) == func.lower('zoe Abramson'))
+    result = [{'id': getattr(d, 'id'), 'name': getattr(d, 'name')} for d in user]
     return jsonify(users=result)
 
+
+@app.route('/save', methods=['PATCH'])
+def save_user():
+    data = request.get_json()
+
+    userid = data['userId']
+    action = data['action']
+    timestamp = data['timestamp']
+
+    useraction = UserAction(userid, action, timestamp)
+    db.session.add(useraction)
+    db.session.commit()
+    return "success"
 
 
 if __name__ == "__main__":
