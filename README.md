@@ -12,7 +12,10 @@ after install finishes type python on the same path
 Enter this codes with given order
 
 from main import db
+<br>
 db.create_all()
+<br>
 exit()
+<br>
 
 this creates our table
