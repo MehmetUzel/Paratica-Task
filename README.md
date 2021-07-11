@@ -19,3 +19,10 @@ exit()
 <br>
 
 this creates our table
+<br>
+after creating tables use sampleData.txt to populate table (via Query)
+
+Notes: <br>
+I think timestamp should be created based on database function "now". <br>
+username and surname should be different columns
+
