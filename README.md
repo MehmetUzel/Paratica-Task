@@ -25,6 +25,15 @@ exit()
 this creates our table
 <br>
 after creating tables use sampleData.txt to populate table (via Query)
+<br>
+
+After inserting data into the database you can use postman collection provided. <br>
+Collection includes :<br>
+GET   /users <br>
+GET   /users/{id}  <br>
+POST  /search    (With Json input) <br>
+PATCH /save      (With Json input) <br>
+
 
 Notes: <br>
 I think timestamp should be created based on database function "now". <br>
