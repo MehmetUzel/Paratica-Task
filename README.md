@@ -7,7 +7,11 @@ first navigate to the path that includes requirements.txt file
 
 and run this command " pip install -r requirements.txt "
 
-after install finishes type python on the same path
+Change values in line 11 with your password port and db name
+<br>
+postgresql://postgres:{password}@localhost:{port}/{databasename}
+
+after changing DB_URI with your local values type python on the same path
 
 Enter this codes with given order
 

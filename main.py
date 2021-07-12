@@ -1,8 +1,5 @@
-import json
-
 from flask import Flask, jsonify, request, render_template, Response
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import func
 
 app = Flask(__name__)
 
@@ -10,6 +7,7 @@ ENV = 'dev'
 
 if ENV == 'dev':
     app.debug = True
+    # postgresql://postgres:{password}@localhost:{port}/{databasename}
     app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:admin@localhost:5432/paratica"
 else:
     app.debug = False
@@ -62,21 +60,30 @@ def get_name(user_id):
 
 @app.route('/search', methods=['POST'])
 def find_user():
-    data = request.get_json()
-    name = data['filter']['name']
-    user = db.session.query(UserModel).filter(UserModel.name.ilike('%' + name + '%'))
-    # user = db.session.query(UserModel).filter(func.lower(UserModel.name) == func.lower('zoe Abramson'))
+    try:
+        data = request.get_json()
+        name = data['filter']['name']
+        user = db.session.query(UserModel).filter(UserModel.name.ilike('%' + name + '%'))
+    except KeyError:
+        return "Please provide Json in correct format"
+    except TypeError:
+        return "Please provide a Json file"
     result = [{'id': getattr(d, 'id'), 'name': getattr(d, 'name')} for d in user]
     return jsonify(users=result)
 
 
 @app.route('/save', methods=['PATCH'])
 def save_user():
-    data = request.get_json()
+    try:
+        data = request.get_json()
 
-    userid = data['userId']
-    action = data['action']
-    timestamp = data['timestamp']
+        userid = data['userId']
+        action = data['action']
+        timestamp = data['timestamp']
+    except KeyError:
+        return "Please provide Json in correct format"
+    except TypeError:
+        return "Please provide a Json file"
 
     useraction = UserAction(userid, action, timestamp)
     db.session.add(useraction)
